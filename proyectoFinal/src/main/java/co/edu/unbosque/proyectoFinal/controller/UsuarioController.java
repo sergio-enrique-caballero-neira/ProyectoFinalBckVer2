@@ -29,7 +29,7 @@ public class UsuarioController {
 	
 	@Autowired
 	private UsuarioService usuarioService;
-	
+	/**Constructor vacío de UsuarioController*/
 	public UsuarioController() {
 		// TODO Auto-generated constructor stub
 	}

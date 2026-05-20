@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 public class UsuarioDTO extends PersonaDTO {
-
+	/**id*/
 	private static final long serialVersionUID = 1L;
 	
 	private List<VirusTotalUploadResponseDTO> historial;
