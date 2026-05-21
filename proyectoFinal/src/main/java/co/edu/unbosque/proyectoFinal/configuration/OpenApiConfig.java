@@ -9,9 +9,19 @@ import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuracion personalizada de OpenAPI (Swagger) para la documentacion de la API.
+ * Define el esquema de seguridad JWT, respuestas de error comunes y la descripcion general
+ * de la API incluyendo roles, flujo de autenticacion y credenciales de prueba.
+ */
 @Configuration
 public class OpenApiConfig {
 
+	/**
+	 * Crea una configuracion personalizada de OpenAPI con informacion de la API,
+	 * esquema de seguridad bearerAuth para JWT y respuestas de error predefinidas.
+	 * @return objeto OpenAPI configurado
+	 */
 	@Bean
 	public OpenAPI customOpenAPI() {
 

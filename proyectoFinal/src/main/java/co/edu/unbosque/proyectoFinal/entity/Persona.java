@@ -9,6 +9,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
+/**
+ * Clase base abstracta para todas las personas del sistema (usuarios y administradores).
+ * Implementa UserDetails para integracion con Spring Security.
+ * Usa @MappedSuperclass para que las subclases hereden las columnas en sus propias tablas.
+ */
 @MappedSuperclass
 public abstract class Persona implements UserDetails{
 
@@ -21,10 +26,20 @@ public abstract class Persona implements UserDetails{
     @Enumerated(EnumType.STRING)
 	private Role role;
     
+    /**
+     * Constructor protegido vacio.
+     */
     protected Persona() {
 		// TODO Auto-generated constructor stub
 	}
 
+    /**
+     * Constructor con datos basicos de la persona.
+     * @param nombre nombre de la persona (usado como username en Spring Security)
+     * @param email correo electronico
+     * @param telefono numero de telefono
+     * @param contrasena contraseña encriptada
+     */
     protected Persona(String nombre, String email, String telefono, String contrasena) {
 		super();
 		this.nombre = nombre;
@@ -33,8 +48,11 @@ public abstract class Persona implements UserDetails{
 		this.contrasena = contrasena;
 	}
 	
+	/**
+	 * Enumeracion de roles disponibles en el sistema.
+	 */
 	public enum Role {
-		/** Usuario regular con permisos básicos */
+		/** Usuario regular con permisos basicos */
 		USUARIO, 
 		/** Administrador con permisos completos */
 		ADMIN

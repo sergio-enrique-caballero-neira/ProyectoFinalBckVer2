@@ -19,6 +19,10 @@ import co.edu.unbosque.proyectoFinal.dto.AdministradorDTO;
 import co.edu.unbosque.proyectoFinal.service.AdministradorService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
+/**
+ * Controlador REST para la gestion de administradores (ADMIN).
+ * Expone endpoints CRUD para crear, listar, actualizar y eliminar administradores.
+ */
 @RestController
 @RequestMapping("/administrador")
 @CrossOrigin(origins = { "http://localhost:8080", "*" })
@@ -29,10 +33,22 @@ public class AdministradorController {
 	@Autowired
 	private AdministradorService administradorService;
 	
+	/**
+	 * Constructor vacio de AdministradorController.
+	 */
 	public AdministradorController() {
 		// TODO Auto-generated constructor stub
 	}
 	
+    /**
+     * Crea un nuevo administrador con los datos proporcionados.
+     * @param nombre nombre del administrador
+     * @param email correo electronico
+     * @param telefono numero de telefono
+     * @param contrasena contraseña del administrador
+     * @param cargo cargo del administrador
+     * @return ResponseEntity con mensaje de exito y estado 201 CREATED
+     */
     @PostMapping("/crear")
     public ResponseEntity<String> crearUsuarioNormal(@RequestParam String nombre, @RequestParam String email, @RequestParam String telefono, @RequestParam String contrasena, @RequestParam String cargo){
         AdministradorDTO nuevo = new AdministradorDTO(nombre, email, telefono,contrasena, cargo);
@@ -40,12 +56,25 @@ public class AdministradorController {
         return new ResponseEntity<>("Dato Creado con exito", HttpStatus.CREATED);
     }
 
-
+    /**
+     * Obtiene la lista completa de administradores registrados.
+     * @return ResponseEntity con lista de AdministradorDTO y estado 202 ACCEPTED
+     */
     @GetMapping("/mostrartodo")
     public ResponseEntity<List<AdministradorDTO>> mostrarTodo(){
         return new ResponseEntity<>(administradorService.getAll(), HttpStatus.ACCEPTED);
     }
     
+    /**
+     * Actualiza los datos de un administrador existente.
+     * @param id identificador del administrador
+     * @param nombre nuevo nombre
+     * @param email nuevo correo electronico
+     * @param telefono nuevo numero de telefono
+     * @param contrasena nueva contraseña
+     * @param cargo nuevo cargo
+     * @return ResponseEntity con mensaje de exito y estado 202 ACCEPTED
+     */
     @PutMapping("/actualizar")
     public ResponseEntity<String> actualizar(@RequestParam long id, @RequestParam String nombre, @RequestParam String email, @RequestParam String telefono, @RequestParam String contrasena, @RequestParam String cargo){
     	AdministradorDTO nuevo = new AdministradorDTO(nombre, email, telefono, contrasena, cargo);
@@ -53,6 +82,11 @@ public class AdministradorController {
         return new ResponseEntity<>("Dato actualizado con exito", HttpStatus.ACCEPTED);
     }
     
+    /**
+     * Elimina un administrador por su identificador.
+     * @param id identificador del administrador a eliminar
+     * @return ResponseEntity con mensaje de exito y estado 202 ACCEPTED
+     */
     @DeleteMapping("/eliminar")
     public ResponseEntity<String> eliminar(@RequestParam long id){
     	administradorService.deleteByID(id);

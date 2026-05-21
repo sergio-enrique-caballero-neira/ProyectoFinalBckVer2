@@ -2,6 +2,10 @@ package co.edu.unbosque.proyectoFinal.dto;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ * DTO base para la transferencia de datos de personas (usuarios y administradores).
+ * Implementa UserDetails para integracion con Spring Security.
+ */
 public abstract class PersonaDTO implements UserDetails{
 
 	private static final long serialVersionUID = 1L;
@@ -13,10 +17,20 @@ public abstract class PersonaDTO implements UserDetails{
     private String contrasena;
     private Role role;
     
+    /**
+     * Constructor protegido vacio.
+     */
     protected PersonaDTO() {
 		// TODO Auto-generated constructor stub
 	}
 
+    /**
+     * Constructor con datos basicos de la persona.
+     * @param nombre nombre de la persona
+     * @param email correo electronico
+     * @param telefono numero de telefono
+     * @param contrasena contraseña
+     */
     protected PersonaDTO(String nombre, String email, String telefono, String contrasena) {
 		super();
 		this.nombre = nombre;
@@ -25,8 +39,11 @@ public abstract class PersonaDTO implements UserDetails{
 		this.contrasena = contrasena;
 	}
 	
+	/**
+	 * Enumeracion de roles disponibles en el sistema.
+	 */
 	public enum Role {
-		/** Usuario regular con permisos básicos */
+		/** Usuario regular con permisos basicos */
 		USUARIO, 
 		/** Administrador con permisos completos */
 		ADMIN

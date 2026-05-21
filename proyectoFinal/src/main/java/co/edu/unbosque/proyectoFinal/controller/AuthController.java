@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import co.edu.unbosque.proyectoFinal.entity.Persona;
 import co.edu.unbosque.proyectoFinal.security.JwtUtil;
 
+/**
+ * Controlador REST para autenticacion de usuarios y administradores.
+ * Maneja el endpoint de login que genera tokens JWT.
+ */
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins = { "http://localhost:8080", "*" })
@@ -24,6 +28,11 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
+    /**
+     * Constructor que inyecta los componentes de autenticacion y generacion de tokens.
+     * @param authenticationManager gestor de autenticacion de Spring Security
+     * @param jwtUtil utilidad para generacion y validacion de tokens JWT
+     */
     public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
@@ -31,14 +40,9 @@ public class AuthController {
 
     /**
      * Login unificado para Usuario y Administrador.
-     *
-     * Enviar: nombre + contrasena (como @RequestParam).
-     * Responde con: { "token": "...", "role": "USUARIO" | "ADMIN" }
-     *
-     * IMPORTANTE: las contraseñas en la BD deben estar encriptadas con BCrypt.
-     * LoadDatabase ya las guarda encriptadas al iniciar la app.
-     * Al crear usuarios desde /usuario/crear o /administrador/crear, asegúrate
-     * de encriptar la contraseña con PasswordEncoder antes de guardar en BD.
+     * @param nombre nombre de usuario
+     * @param contrasena contraseña del usuario
+     * @return ResponseEntity con token JWT y rol, o 401 si las credenciales son invalidas
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(
@@ -64,16 +68,32 @@ public class AuthController {
         }
     }
 
+    /**
+     * DTO interno para la respuesta de autenticacion con token JWT y rol del usuario.
+     */
     private static class AuthResponse {
         private final String token;
         private final String role;
 
-        public AuthResponse(String token, String role) {
+        /**
+         * Crea una respuesta de autenticacion.
+         * @param token token JWT generado
+         * @param rol rol del usuario autenticado
+         */
+        public AuthResponse(String token, String rol) {
             this.token = token;
-            this.role = role;
+            this.role = rol;
         }
 
+        /**
+         * Obtiene el token JWT.
+         * @return token JWT
+         */
         public String getToken() { return token; }
+        /**
+         * Obtiene el rol del usuario.
+         * @return rol del usuario (USUARIO o ADMIN)
+         */
         public String getRole()  { return role; }
     }
 }

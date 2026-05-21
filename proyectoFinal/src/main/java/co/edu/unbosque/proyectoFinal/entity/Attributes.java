@@ -10,6 +10,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
+/**
+ * Entidad JPA que representa los atributos de un analisis de VirusTotal.
+ * Contiene el estado del analisis, estadisticas de deteccion y resultados por motor.
+ */
 @Entity
 public class Attributes {
 
@@ -21,10 +25,19 @@ public class Attributes {
 	@OneToMany(cascade = CascadeType.ALL)
 	private Map<String, EngineResult> results;
 
+	/**
+	 * Constructor vacio.
+	 */
 	public Attributes() {
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Constructor con estado, estadisticas y resultados.
+	 * @param status estado del analisis (queued, completed, etc.)
+	 * @param stats estadisticas de deteccion
+	 * @param results resultados por motor de antivirus
+	 */
 	public Attributes(String status, Stats stats, Map<String, EngineResult> results) {
 		super();
 		this.status = status;
@@ -32,34 +45,66 @@ public class Attributes {
 		this.results = Map.copyOf(results);
 	}
 
+	/**
+	 * Obtiene el estado del analisis.
+	 * @return estado del analisis
+	 */
 	public String getStatus() {
 		return status;
 	}
 
+	/**
+	 * Establece el estado del analisis.
+	 * @param status nuevo estado
+	 */
 	public void setStatus(String status) {
 		this.status = status;
 	}
 
+	/**
+	 * Obtiene las estadisticas de deteccion.
+	 * @return estadisticas de deteccion
+	 */
 	public Stats getStats() {
 		return stats;
 	}
 
+	/**
+	 * Establece las estadisticas de deteccion.
+	 * @param stats nuevas estadisticas
+	 */
 	public void setStats(Stats stats) {
 		this.stats = stats;
 	}
 
+	/**
+	 * Obtiene los resultados por motor de antivirus.
+	 * @return mapa de resultados por motor
+	 */
 	public Map<String, EngineResult> getResults() {
 		return results;
 	}
 
+	/**
+	 * Establece los resultados por motor de antivirus.
+	 * @param results nuevo mapa de resultados
+	 */
 	public void setResults(Map<String, EngineResult> results) {
 		this.results = Map.copyOf(results);
 	}
 
+	/**
+	 * Obtiene el identificador interno de los atributos.
+	 * @return identificador interno
+	 */
 	public long getId_Attributes() {
 		return id_Attributes;
 	}
 
+	/**
+	 * Establece el identificador interno de los atributos.
+	 * @param id_Attributes nuevo identificador
+	 */
 	public void setId_Attributes(long id_Attributes) {
 		this.id_Attributes = id_Attributes;
 	}

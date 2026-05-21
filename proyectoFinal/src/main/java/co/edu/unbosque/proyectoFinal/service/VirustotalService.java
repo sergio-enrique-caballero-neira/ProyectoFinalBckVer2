@@ -20,6 +20,10 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+/**
+ * Servicio para la integracion con la API de VirusTotal.
+ * Permite subir archivos para escaneo y consultar los resultados de analisis.
+ */
 @Service
 public class VirustotalService {
 
@@ -30,6 +34,14 @@ public class VirustotalService {
 	@Autowired
 	private ModelMapper mapper;
 
+	/**
+	 * Sube un archivo a VirusTotal para escaneo.
+	 * @param archivo archivo a subir
+	 * @return respuesta de VirusTotal con el ID del analisis
+	 * @throws Exception si ocurre un error durante la subida
+	 * @throws FileEmpyException si el archivo esta vacio
+	 * @throws AlreadySubmittedException si el archivo ya fue subido previamente
+	 */
 	public VirusTotalUploadResponseDTO subirArchivo(MultipartFile archivo) throws Exception {
 
 		if (archivo.isEmpty()) {
@@ -68,6 +80,14 @@ public class VirustotalService {
 		
 	}
 
+	/**
+	 * Obtiene los resultados de un analisis de VirusTotal por su ID.
+	 * @param analysisId identificador del analisis
+	 * @return respuesta de VirusTotal con los resultados del analisis
+	 * @throws Exception si ocurre un error durante la consulta
+	 * @throws QueueException si el analisis aun esta en cola
+	 * @throws ResourceNotFoundException si no se encuentra el analisis
+	 */
 	public VirusTotalUploadResponseDTO getAnalysis(String analysisId) throws Exception {
 		
 		if (analysisId == null || analysisId.isEmpty()) {
@@ -96,6 +116,12 @@ public class VirustotalService {
 		throw new ResourceNotFoundException("No se encontro el analisis con el id proporcionado: " + analysisId);
 	}
 	
+	/**
+	 * Calcula el hash SHA-256 de un archivo.
+	 * @param archivo archivo del cual calcular el hash
+	 * @return hash SHA-256 en formato hexadecimal
+	 * @throws Exception si ocurre un error durante el calculo
+	 */
 	public String obtenerHash(MultipartFile archivo) throws Exception {
 	    byte[] contenido = archivo.getBytes();
 	    byte[] hashBytes = MessageDigest.getInstance("SHA-256").digest(contenido);

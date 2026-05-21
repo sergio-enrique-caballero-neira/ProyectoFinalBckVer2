@@ -16,6 +16,10 @@ import co.edu.unbosque.proyectoFinal.entity.VirusTotalUploadResponse;
 import co.edu.unbosque.proyectoFinal.exception.*;
 import co.edu.unbosque.proyectoFinal.repository.UsuarioRepository;
 
+/**
+ * Servicio para la gestion de usuarios regulares (USUARIO).
+ * Implementa operaciones CRUD y manejo del historial de analisis de VirusTotal.
+ */
 @Service
 public class UsuarioService implements CRUDoperation<UsuarioDTO> {
 
@@ -28,10 +32,19 @@ public class UsuarioService implements CRUDoperation<UsuarioDTO> {
 	@Autowired
     private PasswordEncoder passwordEncoder;
 
+	/**
+	 * Constructor vacio de UsuarioService.
+	 */
 	public UsuarioService() {
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Crea un nuevo usuario validando los datos y encriptando la contraseña.
+	 * @param data datos del usuario a crear
+	 * @return 0 si la operacion fue exitosa
+	 * @throws BadRequestException si los datos son invalidos o el usuario ya existe
+	 */
 	@Override
 	public int create(UsuarioDTO data) {
 		checkData(data);
@@ -47,6 +60,11 @@ public class UsuarioService implements CRUDoperation<UsuarioDTO> {
 		return 0;
 	}
 
+	/**
+	 * Obtiene todos los usuarios registrados.
+	 * @return lista de UsuarioDTO
+	 * @throws ResourceNotFoundException si no se encuentran usuarios
+	 */
 	@Override
 	public List<UsuarioDTO> getAll() {
 		List<Usuario> entityList = (List<Usuario>) usuarioRepository.findAll();
@@ -63,6 +81,13 @@ public class UsuarioService implements CRUDoperation<UsuarioDTO> {
 		return dtoList;
 	}
 
+	/**
+	 * Elimina un usuario por su identificador.
+	 * @param id identificador del usuario
+	 * @return 0 si la operacion fue exitosa
+	 * @throws BadRequestException si el ID es invalido
+	 * @throws ResourceNotFoundException si el usuario no existe
+	 */
 	@Override
 	public int deleteByID(Long id) {
 		if (id == null || id < 0) {
@@ -78,6 +103,14 @@ public class UsuarioService implements CRUDoperation<UsuarioDTO> {
 		return 0;
 	}
 
+	/**
+	 * Actualiza los datos de un usuario existente.
+	 * @param id identificador del usuario
+	 * @param data nuevos datos del usuario
+	 * @return 0 si la operacion fue exitosa
+	 * @throws BadRequestException si el ID es invalido
+	 * @throws ResourceNotFoundException si el usuario no existe
+	 */
 	@Override
 	public int updateByID(Long id, UsuarioDTO data) {
 		if (id == null || id <= 0) {
@@ -103,16 +136,30 @@ public class UsuarioService implements CRUDoperation<UsuarioDTO> {
 		return 0;
 	}
 
+	/**
+	 * Cuenta el numero total de usuarios registrados.
+	 * @return numero total de usuarios
+	 */
 	@Override
 	public long count() {
 		return usuarioRepository.count();
 	}
 
+	/**
+	 * Verifica si existe un usuario con el identificador dado.
+	 * @param id identificador del usuario
+	 * @return true si existe, false en caso contrario
+	 */
 	@Override
 	public boolean exist(Long id) {
 		return usuarioRepository.existsById(id);
 	}
 
+	/**
+	 * Verifica si ya existe un usuario con el email proporcionado.
+	 * @param email correo electronico a verificar
+	 * @throws BadRequestException si el email ya esta registrado
+	 */
 	public boolean existByEmail(String email) {
 		usuarioRepository.findAll().forEach(usuario -> {
 			if (usuario.getEmail().equals(email)) {
@@ -122,6 +169,11 @@ public class UsuarioService implements CRUDoperation<UsuarioDTO> {
 		return false;
 	}
 
+	/**
+	 * Verifica si ya existe un usuario con el telefono proporcionado.
+	 * @param telefono numero de telefono a verificar
+	 * @throws BadRequestException si el telefono ya esta registrado
+	 */
 	public boolean existByTelefono(String telefono) {
 		usuarioRepository.findAll().forEach(usuario -> {
 			if (usuario.getTelefono().equals(telefono)) {
@@ -131,6 +183,11 @@ public class UsuarioService implements CRUDoperation<UsuarioDTO> {
 		return false;
 	}
 
+	/**
+	 * Verifica si ya existe un usuario con el nombre proporcionado.
+	 * @param nombre nombre de usuario a verificar
+	 * @throws BadRequestException si el nombre ya esta registrado
+	 */
 	public boolean existByNombre(String nombre) {
 		usuarioRepository.findAll().forEach(usuario -> {
 			if (usuario.getNombre().equals(nombre)) {
@@ -140,6 +197,14 @@ public class UsuarioService implements CRUDoperation<UsuarioDTO> {
 		return false;
 	}
 
+	/**
+	 * Agrega una respuesta de analisis de VirusTotal al historial de un usuario.
+	 * @param id identificador del usuario
+	 * @param datoDTO datos de la respuesta de VirusTotal
+	 * @return 0 si la operacion fue exitosa
+	 * @throws ResourceNotFoundException si el usuario no existe
+	 * @throws BadRequestException si el archivo ya fue escaneado previamente
+	 */
 	public int agregarDatoHistorial(Long id, VirusTotalUploadResponseDTO datoDTO) {
 
 		Optional<Usuario> encontrado = usuarioRepository.findById(id);
@@ -165,6 +230,14 @@ public class UsuarioService implements CRUDoperation<UsuarioDTO> {
 		return 0;
 	}
 
+	/**
+	 * Actualiza un analisis existente en el historial de un usuario con los resultados de VirusTotal.
+	 * @param id identificador del usuario
+	 * @param datoDTO datos actualizados de la respuesta de VirusTotal
+	 * @param analysisId identificador del analisis a actualizar
+	 * @return 0 si la operacion fue exitosa
+	 * @throws ResourceNotFoundException si el usuario no existe
+	 */
 	public int actulizarDatoHistorial(Long id, VirusTotalUploadResponseDTO datoDTO, String analysisId) {
 
 		VirusTotalUploadResponse dato = mapper.map(datoDTO, VirusTotalUploadResponse.class);
@@ -190,10 +263,21 @@ public class UsuarioService implements CRUDoperation<UsuarioDTO> {
 		return 0;
 	}
 	
+	/**
+	 * Obtiene el identificador de un usuario por su nombre.
+	 * @param nombre nombre del usuario
+	 * @return identificador del usuario
+	 */
 	public long getIdByUsername(String nombre) {
 		return usuarioRepository.findByNombre(nombre).get().getId();
 	}
 	
+	/**
+	 * Valida los datos de un usuario incluyendo nombre, contraseña, email y telefono.
+	 * @param data datos del usuario a validar
+	 * @return true si todos los datos son validos
+	 * @throws BadRequestException si algun dato es invalido
+	 */
 	public boolean checkData(UsuarioDTO data) {
 	    validateNotNull(data);
 	    validateNombre(data.getNombre());
@@ -203,12 +287,22 @@ public class UsuarioService implements CRUDoperation<UsuarioDTO> {
 	    return true;
 	}
 
+	/**
+	 * Valida que los datos del usuario no sean nulos.
+	 * @param data datos del usuario
+	 * @throws BadRequestException si los datos son nulos
+	 */
 	private void validateNotNull(UsuarioDTO data) {
 	    if (data == null) {
 	        throw new BadRequestException("Datos de usuario no proporcionados");
 	    }
 	}
 
+	/**
+	 * Valida el nombre de usuario: longitud entre 6-50 caracteres, solo alfanumericos.
+	 * @param nombre nombre a validar
+	 * @throws BadRequestException si el nombre es invalido
+	 */
 	private void validateNombre(String nombre) {
 	    if (nombre == null || nombre.length() < 6 || nombre.length() > 50) {
 	        throw new BadRequestException("El nombre debe tener mínimo 6 caracteres y máximo 50");
@@ -218,6 +312,11 @@ public class UsuarioService implements CRUDoperation<UsuarioDTO> {
 	    }
 	}
 
+	/**
+	 * Valida la contraseña: 8-64 caracteres con mayusculas, minusculas, numeros y especiales.
+	 * @param contrasena contraseña a validar
+	 * @throws BadRequestException si la contraseña es debil o invalida
+	 */
 	private void validateContrasena(String contrasena) {
 	    if (contrasena == null || contrasena.isBlank() || contrasena.length() < 8 || contrasena.length() > 64) {
 	        throw new BadRequestException("Contraseña inválida: mínimo 8 y máximo 64 caracteres");
@@ -227,6 +326,11 @@ public class UsuarioService implements CRUDoperation<UsuarioDTO> {
 	    }
 	}
 
+	/**
+	 * Valida el formato del correo electronico.
+	 * @param email correo a validar
+	 * @throws BadRequestException si el email es invalido
+	 */
 	private void validateEmail(String email) {
 	    if (email == null || email.isBlank() || email.length() > 120) {
 	        throw new BadRequestException("Email inválido");
@@ -236,12 +340,23 @@ public class UsuarioService implements CRUDoperation<UsuarioDTO> {
 	    }
 	}
 
+	/**
+	 * Valida el numero de telefono: solo numeros, exactamente 10 digitos.
+	 * @param telefono telefono a validar
+	 * @throws BadRequestException si el telefono es invalido
+	 */
 	private void validateTelefono(String telefono) {
 	    if (telefono == null || telefono.isBlank() || !telefono.trim().matches("^\\d{10}$")) {
 	        throw new BadRequestException("Teléfono inválido: solo números, de 10 dígitos");
 	    }
 	}
 	
+	/**
+	 * Obtiene el historial de analisis de VirusTotal de un usuario por su ID.
+	 * @param id identificador del usuario
+	 * @return lista de respuestas de VirusTotal
+	 * @throws ResourceNotFoundException si el usuario no existe
+	 */
 	public List<VirusTotalUploadResponseDTO> getHistorialById(long id) {
 		Optional<Usuario> encontrado = usuarioRepository.findById(id);
 

@@ -12,11 +12,23 @@ import co.edu.unbosque.proyectoFinal.entity.Usuario;
 import co.edu.unbosque.proyectoFinal.repository.AdministradorRepository;
 import co.edu.unbosque.proyectoFinal.repository.UsuarioRepository;
 
+/**
+ * Configuracion para la precarga de datos iniciales en la base de datos.
+ * Crea cuentas predeterminadas para el administrador y un usuario regular
+ * al iniciar la aplicacion si no existen previamente.
+ */
 @Configuration
 public class LoadDatabase {
 
 	private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
 
+	/**
+	 * Bean que ejecuta la inicializacion de la base de datos al arranque.
+	 * @param adminRepo repositorio de administradores
+	 * @param usuarioRepo repositorio de usuarios
+	 * @param passwordEncoder codificador de contraseñas
+	 * @return CommandLineRunner que ejecuta la logica de precarga
+	 */
 	@Bean
 	CommandLineRunner initDatabase(AdministradorRepository adminRepo, UsuarioRepository usuarioRepo,
 			PasswordEncoder passwordEncoder) {

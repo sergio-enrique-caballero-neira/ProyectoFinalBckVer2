@@ -21,6 +21,11 @@ import co.edu.unbosque.proyectoFinal.dto.VirusTotalUploadResponseDTO;
 import co.edu.unbosque.proyectoFinal.service.UsuarioService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
+/**
+ * Controlador REST para la gestion de usuarios regulares (USUARIO).
+ * Expone endpoints CRUD para crear, listar, actualizar y eliminar usuarios,
+ * ademas de consultar el historial de analisis de VirusTotal.
+ */
 @RestController
 @RequestMapping("/usuario")
 @CrossOrigin(origins = { "http://localhost:8080", "*" })
@@ -30,11 +35,22 @@ public class UsuarioController {
 	
 	@Autowired
 	private UsuarioService usuarioService;
-	/**Constructor vacío de UsuarioController*/
+	
+	/**
+	 * Constructor vacio de UsuarioController.
+	 */
 	public UsuarioController() {
 		// TODO Auto-generated constructor stub
 	}
 	
+    /**
+     * Crea un nuevo usuario regular con los datos proporcionados.
+     * @param nombre nombre de usuario
+     * @param email correo electronico
+     * @param telefono numero de telefono
+     * @param contrasena contraseña del usuario
+     * @return ResponseEntity con mensaje de exito y estado 201 CREATED
+     */
     @PostMapping("/crear")
     public ResponseEntity<String> crearUsuarioNormal(@RequestParam String nombre, @RequestParam String email, @RequestParam String telefono, @RequestParam String contrasena){
         UsuarioDTO nuevo = new UsuarioDTO(nombre, email, telefono,contrasena, new ArrayList<VirusTotalUploadResponseDTO>());
@@ -42,21 +58,44 @@ public class UsuarioController {
         return new ResponseEntity<>("Usuario registrado exitosamente", HttpStatus.CREATED);
     }
 
+    /**
+     * Obtiene la lista completa de usuarios registrados.
+     * @return ResponseEntity con lista de UsuarioDTO y estado 202 ACCEPTED
+     */
     @GetMapping("/mostrartodo")
     public ResponseEntity<List<UsuarioDTO>> mostrarTodo(){
         return new ResponseEntity<>(usuarioService.getAll(), HttpStatus.ACCEPTED);
     }
     
+    /**
+     * Obtiene el ID de un usuario por su nombre.
+     * @param nombre nombre del usuario
+     * @return ResponseEntity con el ID del usuario y estado 202 ACCEPTED
+     */
     @GetMapping("/getIdByUsername")
     public ResponseEntity<Long> getIdByUsername(@RequestParam String nombre){
 		return new ResponseEntity<>(usuarioService.getIdByUsername(nombre), HttpStatus.ACCEPTED);
 	}
     
+    /**
+     * Obtiene el historial de analisis de VirusTotal de un usuario por su ID.
+     * @param id identificador del usuario
+     * @return ResponseEntity con lista de respuestas de VirusTotal y estado 202 ACCEPTED
+     */
     @GetMapping("/getHistorialById")
     public ResponseEntity<List<VirusTotalUploadResponseDTO>> getHistorialById(@RequestParam long id){
 		return new ResponseEntity<>(usuarioService.getHistorialById(id), HttpStatus.ACCEPTED);
 	}
     
+    /**
+     * Actualiza los datos de un usuario existente.
+     * @param id identificador del usuario
+     * @param nombre nuevo nombre de usuario
+     * @param email nuevo correo electronico
+     * @param telefono nuevo numero de telefono
+     * @param contrasena nueva contraseña
+     * @return ResponseEntity con mensaje de exito y estado 202 ACCEPTED
+     */
     @PutMapping("/actualizar")
     public ResponseEntity<String> actualizar(@RequestParam long id, @RequestParam String nombre, @RequestParam String email, @RequestParam String telefono, @RequestParam String contrasena){
         UsuarioDTO nuevo = new UsuarioDTO(nombre, email, telefono, contrasena);
@@ -64,6 +103,11 @@ public class UsuarioController {
         return new ResponseEntity<>("Dato actualizado con exito", HttpStatus.ACCEPTED);
     }
     
+    /**
+     * Elimina un usuario por su identificador.
+     * @param id identificador del usuario a eliminar
+     * @return ResponseEntity con mensaje de exito y estado 202 ACCEPTED
+     */
     @DeleteMapping("/eliminar")
     public ResponseEntity<String> eliminar(@RequestParam long id){
         usuarioService.deleteByID(id);
