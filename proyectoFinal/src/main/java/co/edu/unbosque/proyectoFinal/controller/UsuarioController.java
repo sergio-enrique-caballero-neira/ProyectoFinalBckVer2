@@ -1,5 +1,6 @@
 package co.edu.unbosque.proyectoFinal.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class UsuarioController {
 	
     @PostMapping("/crear")
     public ResponseEntity<String> crearUsuarioNormal(@RequestParam String nombre, @RequestParam String email, @RequestParam String telefono, @RequestParam String contrasena){
-        UsuarioDTO nuevo = new UsuarioDTO(nombre, email, telefono,contrasena);
+        UsuarioDTO nuevo = new UsuarioDTO(nombre, email, telefono,contrasena, new ArrayList<VirusTotalUploadResponseDTO>());
         usuarioService.create(nuevo);
         return new ResponseEntity<>("Usuario registrado exitosamente", HttpStatus.CREATED);
     }
