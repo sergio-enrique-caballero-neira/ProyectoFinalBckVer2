@@ -22,7 +22,6 @@ public class EngineResult {
 	 * Constructor vacio.
 	 */
 	public EngineResult() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

@@ -27,7 +27,6 @@ public class Data {
 	 * Constructor vacio.
 	 */
 	public Data() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

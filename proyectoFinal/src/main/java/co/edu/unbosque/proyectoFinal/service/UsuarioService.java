@@ -36,7 +36,6 @@ public class UsuarioService implements CRUDoperation<UsuarioDTO> {
 	 * Constructor vacio de UsuarioService.
 	 */
 	public UsuarioService() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

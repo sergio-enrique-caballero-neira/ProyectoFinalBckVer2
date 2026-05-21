@@ -30,7 +30,6 @@ public abstract class Persona implements UserDetails{
      * Constructor protegido vacio.
      */
     protected Persona() {
-		// TODO Auto-generated constructor stub
 	}
 
     /**

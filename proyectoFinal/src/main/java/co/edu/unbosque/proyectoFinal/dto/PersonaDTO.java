@@ -21,7 +21,6 @@ public abstract class PersonaDTO implements UserDetails{
      * Constructor protegido vacio.
      */
     protected PersonaDTO() {
-		// TODO Auto-generated constructor stub
 	}
 
     /**

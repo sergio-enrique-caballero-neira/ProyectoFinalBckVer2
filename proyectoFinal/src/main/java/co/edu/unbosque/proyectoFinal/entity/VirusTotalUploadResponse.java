@@ -23,7 +23,6 @@ public class VirusTotalUploadResponse {
 	 * Constructor vacio.
 	 */
 	public VirusTotalUploadResponse() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

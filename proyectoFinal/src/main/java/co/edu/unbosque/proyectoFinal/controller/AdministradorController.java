@@ -37,7 +37,6 @@ public class AdministradorController {
 	 * Constructor vacio de AdministradorController.
 	 */
 	public AdministradorController() {
-		// TODO Auto-generated constructor stub
 	}
 	
     /**

@@ -18,7 +18,6 @@ public class AttributesDTO {
 	 * Constructor vacio.
 	 */
 	public AttributesDTO() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

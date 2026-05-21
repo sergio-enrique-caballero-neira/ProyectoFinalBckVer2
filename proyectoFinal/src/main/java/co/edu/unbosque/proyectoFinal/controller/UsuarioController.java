@@ -40,7 +40,6 @@ public class UsuarioController {
 	 * Constructor vacio de UsuarioController.
 	 */
 	public UsuarioController() {
-		// TODO Auto-generated constructor stub
 	}
 	
     /**

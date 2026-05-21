@@ -34,7 +34,6 @@ public class AdministradorService implements CRUDoperation<AdministradorDTO> {
 	 * Constructor vacio de AdministradorService.
 	 */
 	public AdministradorService() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

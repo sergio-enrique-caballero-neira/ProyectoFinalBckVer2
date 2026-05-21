@@ -18,7 +18,6 @@ public class Stats {
 	 * Constructor vacio.
 	 */
 	public Stats() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	/**

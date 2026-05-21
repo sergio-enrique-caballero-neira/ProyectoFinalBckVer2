@@ -19,7 +19,6 @@ public class DataDTO {
 	 * Constructor vacio.
 	 */
 	public DataDTO() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

@@ -29,7 +29,6 @@ public class Attributes {
 	 * Constructor vacio.
 	 */
 	public Attributes() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

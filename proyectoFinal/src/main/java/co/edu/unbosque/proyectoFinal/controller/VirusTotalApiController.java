@@ -39,7 +39,6 @@ public class VirusTotalApiController {
 	 * Constructor vacio de VirusTotalApiController.
 	 */
 	public VirusTotalApiController() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

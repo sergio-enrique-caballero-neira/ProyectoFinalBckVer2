@@ -16,7 +16,6 @@ public class EngineResultDTO {
 	 * Constructor vacio.
 	 */
 	public EngineResultDTO() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

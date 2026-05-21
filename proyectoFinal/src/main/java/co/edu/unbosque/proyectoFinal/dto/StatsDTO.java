@@ -15,7 +15,6 @@ public class StatsDTO {
 	 * Constructor vacio.
 	 */
 	public StatsDTO() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	/**
