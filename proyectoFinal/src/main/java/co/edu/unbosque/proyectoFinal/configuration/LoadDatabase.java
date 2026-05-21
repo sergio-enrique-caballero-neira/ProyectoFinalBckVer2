@@ -12,11 +12,51 @@ import co.edu.unbosque.proyectoFinal.entity.Usuario;
 import co.edu.unbosque.proyectoFinal.repository.AdministradorRepository;
 import co.edu.unbosque.proyectoFinal.repository.UsuarioRepository;
 
+/**
+ * Configuración de carga inicial de datos en la base de datos.
+ *
+ * <p>Esta clase se ejecuta automáticamente al arrancar la aplicación gracias a
+ * la anotación {@code @Configuration} y al bean de tipo {@link CommandLineRunner}.
+ * Su único propósito es garantizar que existan al menos un administrador y un
+ * usuario normal de prueba en la base de datos para poder realizar pruebas
+ * inmediatamente después del despliegue.</p>
+ *
+ * <p>La lógica es idempotente: antes de crear cada registro verifica si ya
+ * existe por nombre para evitar duplicados en reinicios sucesivos.</p>
+ *
+ * <p><strong>Credenciales precargadas:</strong></p>
+ * <ul>
+ *   <li>Administrador → nombre: {@code admin} / contraseña: {@code Admin123!}</li>
+ *   <li>Usuario → nombre: {@code usuario1} / contraseña: {@code Usuario1*}</li>
+ * </ul>
+ *
+ * <p>Las contraseñas se almacenan cifradas con BCrypt mediante el
+ * {@link PasswordEncoder} inyectado.</p>
+ *
+ * @author Equipo de Desarrollo – Universidad El Bosque
+ * @version 2.0
+ * @see AdministradorRepository
+ * @see UsuarioRepository
+ */
 @Configuration
 public class LoadDatabase {
 
+	/** Logger SLF4J para registrar el resultado de la inicialización. */
 	private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
 
+	/**
+	 * Bean {@link CommandLineRunner} que siembra los datos iniciales al arrancar
+	 * la aplicación.
+	 *
+	 * <p>Primero comprueba si el administrador {@code admin} ya existe; si no,
+	 * lo crea con la contraseña cifrada. Luego realiza el mismo proceso para el
+	 * usuario {@code usuario1}.</p>
+	 *
+	 * @param adminRepo       repositorio de administradores
+	 * @param usuarioRepo     repositorio de usuarios normales
+	 * @param passwordEncoder codificador de contraseñas BCrypt
+	 * @return instancia del {@code CommandLineRunner} con la lógica de inicialización
+	 */
 	@Bean
 	CommandLineRunner initDatabase(AdministradorRepository adminRepo, UsuarioRepository usuarioRepo,
 			PasswordEncoder passwordEncoder) {

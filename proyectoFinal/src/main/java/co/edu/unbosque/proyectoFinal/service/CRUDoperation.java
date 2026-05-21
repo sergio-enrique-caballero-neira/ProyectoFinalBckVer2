@@ -3,50 +3,68 @@ package co.edu.unbosque.proyectoFinal.service;
 import java.util.List;
 
 /**
- * Interfaz genérica para operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre cualquier tipo de entidad.
- * Esta interfaz define los métodos básicos que deben implementar los servicios para gestionar entidades en la aplicación.
- * @param <T> Tipo de dato sobre el que se realizan las operaciones CRUD.
+ * Interfaz genérica que define el contrato base de operaciones CRUD para los
+ * servicios de la aplicación.
+ *
+ * <p>Parametrizada con el tipo {@code T} del DTO que opera cada servicio, garantiza
+ * un contrato uniforme entre todos los servicios de negocio. Cada servicio que la
+ * implementa debe proporcionar comportamiento concreto para las seis operaciones
+ * declaradas.</p>
+ *
+ * <p><strong>Servicios que la implementan:</strong></p>
+ * <ul>
+ *   <li>{@link UsuarioService}       – con {@code T = UsuarioDTO}</li>
+ *   <li>{@link AdministradorService} – con {@code T = AdministradorDTO}</li>
+ * </ul>
+ *
+ * @param <T> tipo del DTO sobre el que operan los métodos CRUD
+ *
+ * @author Equipo de Desarrollo – Universidad El Bosque
+ * @version 2.0
  */
 public interface CRUDoperation<T> {
 
     /**
-     * Crea una nueva entidad en el sistema.
-     * @param data Objeto con los datos de la entidad a crear.
-     * @return Código de resultado de la operación (0 si es exitoso, otro valor si hay error).
+     * Crea y persiste un nuevo registro a partir del DTO proporcionado.
+     *
+     * @param dato DTO con los datos del nuevo registro; no puede ser {@code null}
      */
-    public int create(T data);
+    void create(T dato);
 
     /**
-     * Obtiene todas las entidades registradas.
-     * @return Lista de entidades existentes.
+     * Retorna la lista de todos los registros persistidos.
+     *
+     * @return lista de DTOs; nunca {@code null}, puede estar vacía
      */
-    public List<T> getAll();
+    List<T> getAll();
 
     /**
-     * Elimina una entidad por su identificador único.
-     * @param id Identificador de la entidad a eliminar.
-     * @return Código de resultado de la operación (0 si es exitoso, otro valor si hay error).
+     * Elimina el registro identificado por {@code id}.
+     *
+     * @param id identificador único del registro a eliminar
      */
-    public int deleteByID(Long id);
+    void deleteByID(long id);
 
     /**
-     * Actualiza los datos de una entidad existente por su identificador.
-     * @param id Identificador de la entidad a actualizar.
-     * @param data Objeto con los nuevos datos de la entidad.
-     * @return Código de resultado de la operación (0 si es exitoso, otro valor si hay error).
+     * Actualiza el registro identificado por {@code id} con los datos del DTO.
+     *
+     * @param id   identificador único del registro a actualizar
+     * @param dato DTO con los nuevos valores; no puede ser {@code null}
      */
-    public int updateByID(Long id, T data);
+    void updateByID(long id, T dato);
 
     /**
-     * Cuenta el número total de entidades registradas.
-     * @return Número total de entidades.
+     * Retorna el número total de registros persistidos.
+     *
+     * @return cantidad de registros en la base de datos
      */
-    public long count();
+    int count();
 
     /**
-     * Verifica si existe una entidad con el identificador dado.
-     * @param id Identificador de la entidad.
-     * @return true si existe, false en caso contrario.
+     * Comprueba si existe un registro con el identificador indicado.
+     *
+     * @param id identificador único a comprobar
+     * @return {@code true} si existe un registro con ese ID; {@code false} en caso contrario
      */
-    public boolean exist(Long id);
+    boolean exist(long id);
 }

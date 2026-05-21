@@ -11,186 +11,252 @@ import org.springframework.stereotype.Service;
 
 import co.edu.unbosque.proyectoFinal.dto.AdministradorDTO;
 import co.edu.unbosque.proyectoFinal.entity.Administrador;
-import co.edu.unbosque.proyectoFinal.exception.*;
+import co.edu.unbosque.proyectoFinal.exception.BadRequestException;
+import co.edu.unbosque.proyectoFinal.exception.ResourceNotFoundException;
 import co.edu.unbosque.proyectoFinal.repository.AdministradorRepository;
 
+/**
+ * Servicio de lógica de negocio para la gestión de administradores del sistema.
+ *
+ * <p>Implementa {@link CRUDoperation}{@code <AdministradorDTO>} y añade las
+ * validaciones específicas del dominio antes de persistir o actualizar un
+ * administrador. Utiliza {@link ModelMapper} para la conversión bidireccional
+ * entre entidades {@link Administrador} y DTOs {@link AdministradorDTO}.</p>
+ *
+ * <p><strong>Validaciones aplicadas en {@code create} y {@code updateByID}:</strong></p>
+ * <ul>
+ *   <li>El DTO no puede ser {@code null}.</li>
+ *   <li><strong>Nombre</strong>: no nulo, 6-50 caracteres alfanuméricos
+ *       ({@code [a-zA-Z0-9]+}), no duplicado en la base de datos.</li>
+ *   <li><strong>Email</strong>: no nulo, formato válido con {@code @} y dominio,
+ *       no duplicado en la base de datos.</li>
+ *   <li><strong>Teléfono</strong>: no nulo, exactamente 10 dígitos numéricos,
+ *       no duplicado en la base de datos.</li>
+ *   <li><strong>Contraseña</strong>: 8-64 caracteres, al menos una mayúscula,
+ *       una minúscula, un dígito y un carácter especial
+ *       ({@code (?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&...])}).</li>
+ *   <li><strong>Cargo</strong>: no nulo, 3-50 caracteres.</li>
+ * </ul>
+ *
+ * <p>Las contraseñas se almacenan siempre cifradas con BCrypt.</p>
+ *
+ * @author Equipo de Desarrollo – Universidad El Bosque
+ * @version 2.0
+ * @see CRUDoperation
+ * @see AdministradorRepository
+ */
 @Service
 public class AdministradorService implements CRUDoperation<AdministradorDTO> {
-	
-	@Autowired
-	private AdministradorRepository administradorRepository;
-	
-	@Autowired
-	private ModelMapper mapper;
-	
-	@Autowired
+
+    /** Repositorio de acceso a datos de administradores. */
+    @Autowired
+    private AdministradorRepository administradorRepo;
+
+    /** Mapeador de objetos para convertir entre entidades y DTOs. */
+    @Autowired
+    private ModelMapper modelMapper;
+
+    /** Codificador BCrypt para cifrar las contraseñas antes de persistirlas. */
+    @Autowired
     private PasswordEncoder passwordEncoder;
-	
-	public AdministradorService() {
-		// TODO Auto-generated constructor stub
-	}
 
-	@Override
-	public int create(AdministradorDTO data) {
-		checkData(data);
-		
-		existByNombre(data.getNombre());
-		existByEmail(data.getEmail());
-		existByTelefono(data.getTelefono());
-		
-	    Administrador entidad = mapper.map(data, Administrador.class);
-	    entidad.setContrasena(passwordEncoder.encode(entidad.getContrasena()));
-	    administradorRepository.save(entidad);
-		return 0;
-	}
+    /** Constructor vacío requerido por Spring. */
+    public AdministradorService() {}
 
-	@Override
-	public List<AdministradorDTO> getAll() {
-		List<Administrador> entityList = (List<Administrador>) administradorRepository.findAll();
-		List<AdministradorDTO> dtoList = new ArrayList<>();
-		
-		entityList.forEach((entity) -> {
-			dtoList.add(mapper.map(entity, AdministradorDTO.class));
-		});
-		
-		if (dtoList.isEmpty()) {
-			throw new BadRequestException("No se encontraron administradores");
-		}
-		
-		return dtoList;
-	}
+    /**
+     * Valida y crea un nuevo administrador en el sistema.
+     *
+     * <p>Aplica todas las validaciones del dominio y cifra la contraseña con
+     * BCrypt antes de persistir. Si cualquier validación falla, lanza
+     * {@link BadRequestException} con un mensaje descriptivo.</p>
+     *
+     * @param dato DTO con los datos del nuevo administrador
+     * @throws BadRequestException si algún campo es inválido o el nombre,
+     *         email o teléfono ya están registrados
+     */
+    @Override
+    public void create(AdministradorDTO dato) {
+        if (dato == null) throw new BadRequestException("El dato no puede ser nulo");
 
-	@Override
-	public int deleteByID(Long id) {
-		if (id == null || id < 0) {
-			throw new BadRequestException("ID inválido");
-		}
-		
-		Optional<Administrador> encontrado = administradorRepository.findById(id);
-		
-		if (!encontrado.isPresent()) {
-			throw new ResourceNotFoundException("Administrador no encontrado con id: " + id);
-		}
-		
-		administradorRepository.deleteById(id);
-		return 0;
-	}
+        validarNombre(dato.getNombre(), null);
+        validarEmail(dato.getEmail(), null);
+        validarTelefono(dato.getTelefono(), null);
+        validarContrasena(dato.getContrasena());
+        validarCargo(dato.getCargo());
 
-	@Override
-	public int updateByID(Long id, AdministradorDTO data) {
-		if (id == null || id <= 0) {
-			throw new BadRequestException("ID inválido");
-		}
-		
-		Optional<Administrador> encontrado = administradorRepository.findById(id);
-		
-		if (!encontrado.isPresent()) {
-			throw new ResourceNotFoundException("Administrador no encontrado con id: " + id);
-		}
-		
-		checkData(data);
-		
-		AdministradorDTO temp = mapper.map(encontrado.get(), AdministradorDTO.class);
-		temp.setNombre(data.getNombre());
-		temp.setContrasena(passwordEncoder.encode(data.getContrasena()));
-		temp.setEmail(data.getEmail());
-		temp.setTelefono(data.getTelefono());
-		temp.setCargo(data.getCargo());
-		
-		administradorRepository.save(mapper.map(temp, Administrador.class));
-		return 0;
-	}
+        Administrador admin = modelMapper.map(dato, Administrador.class);
+        admin.setContrasena(passwordEncoder.encode(dato.getContrasena()));
+        admin.setRole(co.edu.unbosque.proyectoFinal.entity.Persona.Role.ADMIN);
+        administradorRepo.save(admin);
+    }
 
-	@Override
-	public long count() {
-		return administradorRepository.count();
-	}
+    /**
+     * Retorna la lista de todos los administradores registrados en el sistema.
+     *
+     * @return lista de {@link AdministradorDTO}; nunca {@code null}
+     * @throws BadRequestException si no hay ningún administrador registrado
+     */
+    @Override
+    public List<AdministradorDTO> getAll() {
+        List<Administrador> admins = administradorRepo.findAll();
+        if (admins.isEmpty()) throw new BadRequestException("No hay administradores registrados");
+        List<AdministradorDTO> dtos = new ArrayList<>();
+        for (Administrador a : admins) {
+            dtos.add(modelMapper.map(a, AdministradorDTO.class));
+        }
+        return dtos;
+    }
 
-	@Override
-	public boolean exist(Long id) {
-		return administradorRepository.existsById(id);
-	}
+    /**
+     * Elimina un administrador del sistema por su ID.
+     *
+     * @param id identificador único del administrador a eliminar
+     * @throws BadRequestException       si el ID es nulo o negativo
+     * @throws ResourceNotFoundException si no existe ningún administrador con ese ID
+     */
+    @Override
+    public void deleteByID(long id) {
+        if (id <= 0) throw new BadRequestException("El ID no puede ser nulo o negativo");
+        if (!administradorRepo.existsById(id))
+            throw new ResourceNotFoundException("No existe administrador con ID: " + id);
+        administradorRepo.deleteById(id);
+    }
 
-	public boolean existByEmail(String email) {
-		administradorRepository.findAll().forEach(administrador -> {
-			if (administrador.getEmail().equals(email)) {
-				throw new BadRequestException("El email ya esta registrado");
-			}
-		});
-		return false;
-	}
+    /**
+     * Actualiza todos los campos de un administrador existente identificado por su ID.
+     *
+     * <p>Aplica las mismas validaciones que {@link #create(AdministradorDTO)},
+     * excluyendo de la validación de unicidad el propio registro (para permitir
+     * mantener los mismos valores). Cifra la nueva contraseña con BCrypt.</p>
+     *
+     * @param id   identificador único del administrador a actualizar
+     * @param dato DTO con los nuevos valores
+     * @throws BadRequestException       si el ID es nulo/negativo o algún campo es inválido
+     * @throws ResourceNotFoundException si no existe ningún administrador con ese ID
+     */
+    @Override
+    public void updateByID(long id, AdministradorDTO dato) {
+        if (id <= 0) throw new BadRequestException("El ID no puede ser nulo o negativo");
+        Optional<Administrador> opt = administradorRepo.findById(id);
+        if (opt.isEmpty())
+            throw new ResourceNotFoundException("No existe administrador con ID: " + id);
 
-	public boolean existByTelefono(String telefono) {
-		administradorRepository.findAll().forEach(administrador -> {
-			if (administrador.getTelefono().equals(telefono)) {
-				throw new BadRequestException("El telefono ya esta registrado");
-			}
-		});
-		return false;
-	}
+        Administrador existing = opt.get();
+        validarNombre(dato.getNombre(), existing.getNombre());
+        validarEmail(dato.getEmail(), existing.getEmail());
+        validarTelefono(dato.getTelefono(), existing.getTelefono());
+        validarContrasena(dato.getContrasena());
+        validarCargo(dato.getCargo());
 
-	public boolean existByNombre(String nombre) {
-		administradorRepository.findAll().forEach(administrador -> {
-			if (administrador.getNombre().equals(nombre)) {
-				throw new BadRequestException("El nombre de administrador ya esta registrado");
-			}
-		});
-		return false;
-	}
-	
-	public boolean checkData(AdministradorDTO data) {
-	    validateNotNull(data);
-	    validateNombre(data.getNombre());
-	    validateContrasena(data.getContrasena());
-	    validateEmail(data.getEmail());
-	    validateTelefono(data.getTelefono());
-	    validateCargo(data.getCargo());
-	    return true;
-	}
+        existing.setNombre(dato.getNombre());
+        existing.setEmail(dato.getEmail());
+        existing.setTelefono(dato.getTelefono());
+        existing.setContrasena(passwordEncoder.encode(dato.getContrasena()));
+        existing.setCargo(dato.getCargo());
+        administradorRepo.save(existing);
+    }
 
-	private void validateNotNull(AdministradorDTO data) {
-	    if (data == null) {
-	        throw new BadRequestException("Datos de usuario no proporcionados");
-	    }
-	}
+    /**
+     * Retorna el número total de administradores registrados.
+     *
+     * @return cantidad de administradores en la base de datos
+     */
+    @Override
+    public int count() {
+        return (int) administradorRepo.count();
+    }
 
-	private void validateNombre(String nombre) {
-	    if (nombre == null || nombre.length() < 6 || nombre.length() > 50) {
-	        throw new BadRequestException("El nombre debe tener mínimo 6 caracteres y máximo 50");
-	    }
-	    if (!nombre.matches("^[a-zA-Z0-9]{6,50}$")) {
-	        throw new BadRequestException("El nombre de usuario no puede contener espacios ni caracteres especiales");
-	    }
-	}
+    /**
+     * Comprueba si existe un administrador con el ID indicado.
+     *
+     * @param id identificador único a comprobar
+     * @return {@code true} si existe; {@code false} en caso contrario
+     */
+    @Override
+    public boolean exist(long id) {
+        return administradorRepo.existsById(id);
+    }
 
-	private void validateContrasena(String contrasena) {
-	    if (contrasena == null || contrasena.isBlank() || contrasena.length() < 8 || contrasena.length() > 64) {
-	        throw new BadRequestException("Contraseña inválida: mínimo 8 y máximo 64 caracteres");
-	    }
-	    if (!contrasena.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-={}\\[\\]:;\"'<>?,./]).+$")) {
-	        throw new BadRequestException("Contraseña débil: debe incluir mayúsculas, minúsculas, números y caracteres especiales");
-	    }
-	}
+    // ─── Métodos privados de validación ───────────────────────────────────────
 
-	private void validateEmail(String email) {
-	    if (email == null || email.isBlank() || email.length() > 120) {
-	        throw new BadRequestException("Email inválido");
-	    }
-	    if (!email.trim().matches("^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$") || email.contains(" ")) {
-	        throw new BadRequestException("Formato de email inválido");
-	    }
-	}
+    /**
+     * Valida el nombre del administrador: no nulo, 6-50 chars alfanuméricos, único en la BD
+     * (excepto si coincide con {@code propioNombre}, para permitir actualizaciones sin cambio).
+     *
+     * @param nombre      nombre a validar
+     * @param propioNombre nombre actual del registro (puede ser {@code null} en creación)
+     */
+    private void validarNombre(String nombre, String propioNombre) {
+        if (nombre == null || nombre.isBlank())
+            throw new BadRequestException("El nombre no puede ser nulo o vacío");
+        if (!nombre.matches("[a-zA-Z0-9]{6,50}"))
+            throw new BadRequestException("El nombre debe tener entre 6 y 50 caracteres alfanuméricos");
+        for (Administrador a : administradorRepo.findAll()) {
+            if (a.getNombre().equals(nombre) && !nombre.equals(propioNombre))
+                throw new BadRequestException("El nombre ya está registrado: " + nombre);
+        }
+    }
 
-	private void validateTelefono(String telefono) {
-	    if (telefono == null || telefono.isBlank() || !telefono.trim().matches("^\\d{10}$")) {
-	        throw new BadRequestException("Teléfono inválido: solo números, de 10 dígitos");
-	    }
-	}
-	
-	private void validateCargo(String cargo) {
-	    if (cargo == null || cargo.isBlank() || cargo.length() < 3 || cargo.length() > 50) {
-	        throw new BadRequestException("Cargo inválido: debe tener entre 3 y 50 caracteres");
-	    }
-	}
-	
+    /**
+     * Valida el email del administrador: no nulo, formato válido, único en la BD
+     * (excepto si coincide con {@code propioEmail}).
+     *
+     * @param email      email a validar
+     * @param propioEmail email actual del registro (puede ser {@code null} en creación)
+     */
+    private void validarEmail(String email, String propioEmail) {
+        if (email == null || email.isBlank())
+            throw new BadRequestException("El email no puede ser nulo o vacío");
+        if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$"))
+            throw new BadRequestException("El email no tiene un formato válido");
+        for (Administrador a : administradorRepo.findAll()) {
+            if (a.getEmail().equals(email) && !email.equals(propioEmail))
+                throw new BadRequestException("El email ya está registrado: " + email);
+        }
+    }
+
+    /**
+     * Valida el teléfono del administrador: no nulo, exactamente 10 dígitos, único en la BD
+     * (excepto si coincide con {@code propioTelefono}).
+     *
+     * @param telefono      teléfono a validar
+     * @param propioTelefono teléfono actual del registro (puede ser {@code null} en creación)
+     */
+    private void validarTelefono(String telefono, String propioTelefono) {
+        if (telefono == null || telefono.isBlank())
+            throw new BadRequestException("El teléfono no puede ser nulo o vacío");
+        if (!telefono.matches("\\d{10}"))
+            throw new BadRequestException("El teléfono debe tener exactamente 10 dígitos");
+        for (Administrador a : administradorRepo.findAll()) {
+            if (a.getTelefono().equals(telefono) && !telefono.equals(propioTelefono))
+                throw new BadRequestException("El teléfono ya está registrado: " + telefono);
+        }
+    }
+
+    /**
+     * Valida la contraseña: 8-64 chars, con al menos una mayúscula, una minúscula,
+     * un dígito y un carácter especial.
+     *
+     * @param contrasena contraseña en texto plano a validar
+     */
+    private void validarContrasena(String contrasena) {
+        if (contrasena == null || contrasena.isBlank())
+            throw new BadRequestException("La contraseña no puede ser nula o vacía");
+        if (!contrasena.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&_\\-#])[A-Za-z\\d@$!%*?&_\\-#]{8,64}$"))
+            throw new BadRequestException(
+                "La contraseña debe tener entre 8 y 64 caracteres, incluir al menos una mayúscula, "
+                + "una minúscula, un número y un carácter especial (@$!%*?&_-#)");
+    }
+
+    /**
+     * Valida el cargo del administrador: no nulo, entre 3 y 50 caracteres.
+     *
+     * @param cargo cargo a validar
+     */
+    private void validarCargo(String cargo) {
+        if (cargo == null || cargo.isBlank())
+            throw new BadRequestException("El cargo no puede ser nulo o vacío");
+        if (cargo.length() < 3 || cargo.length() > 50)
+            throw new BadRequestException("El cargo debe tener entre 3 y 50 caracteres");
+    }
 }
