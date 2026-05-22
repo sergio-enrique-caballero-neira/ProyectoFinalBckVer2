@@ -17,7 +17,8 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "administradores")
 public class Administrador extends Persona {
-
+	
+	/**id*/
 	private static final long serialVersionUID = 1L;
 	
 	/** Cargo del administrador. */

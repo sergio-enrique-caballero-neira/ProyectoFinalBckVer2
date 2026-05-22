@@ -21,7 +21,7 @@ import jakarta.persistence.Table;
 @Table(name = "usuarios")
 public class Usuario extends Persona {
 
-
+	/**id*/
 	private static final long serialVersionUID = 1L;
 	
 	/** Historial de analisis de VirusTotal del usuario. */

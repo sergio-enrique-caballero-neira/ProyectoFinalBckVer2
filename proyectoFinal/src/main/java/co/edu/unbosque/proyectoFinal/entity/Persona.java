@@ -16,7 +16,8 @@ import jakarta.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public abstract class Persona implements UserDetails{
-
+	
+	/**id*/
 	private static final long serialVersionUID = 1L;
 	/** Identificador unico de la persona. */
 	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) long id;
