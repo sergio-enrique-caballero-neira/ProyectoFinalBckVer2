@@ -46,7 +46,7 @@ public class VirusTotalApiController {
 	/**
 	 * Sube un archivo a VirusTotal para escaneo y lo agrega al historial del usuario.
 	 * @param id identificador del usuario
-	 * @param archivo archivo a escanear
+	 * @param file archivo a escanear
 	 * @return ResponseEntity con el ID del analisis y estado 201 CREATED
 	 * @throws Exception si ocurre un error durante la subida
 	 */

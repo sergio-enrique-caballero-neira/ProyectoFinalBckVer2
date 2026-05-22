@@ -25,7 +25,7 @@ public class EngineResultDTO {
 	/**
 	 * Constructor con datos del motor.
 	 * @param engine_name nombre del motor de antivirus
-	 * @param categoria categoria de deteccion
+	 * @param category categoria de deteccion
 	 * @param result resultado del analisis
 	 */
 	public EngineResultDTO(String engine_name, String category, String result) {
