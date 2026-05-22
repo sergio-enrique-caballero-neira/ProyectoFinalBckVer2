@@ -12,10 +12,14 @@ import jakarta.persistence.Id;
 @Entity
 public class EngineResult {
 
+	/** Identificador interno del resultado del motor. */
 	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) long id_EngineResult;
 
+	/** Nombre del motor de antivirus. */
 	private String engine_name;
+	/** Categoria de deteccion (malicious, harmless, etc.). */
 	private String category;
+	/** Resultado del analisis del motor. */
 	private String result;
 
 	/**

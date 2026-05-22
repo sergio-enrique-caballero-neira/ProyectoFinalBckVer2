@@ -6,9 +6,13 @@ package co.edu.unbosque.proyectoFinal.dto;
  */
 public class StatsDTO {
 
+	/** Numero de motores que detectaron el archivo como malicioso. */
 	private int malicious;
+	/** Numero de motores que detectaron el archivo como sospechoso. */
 	private int suspicious;
+	/** Numero de motores que no detectaron nada. */
 	private int undetected;
+	/** Numero de motores que detectaron el archivo como inofensivo. */
 	private int harmless;
 	
 	/**
@@ -96,6 +100,10 @@ public class StatsDTO {
 		this.harmless = harmless;
 	}
 
+	/**
+	 * Representacion textual de las estadisticas de deteccion.
+	 * @return cadena con los conteos de deteccion
+	 */
 	@Override
 	public String toString() {
 		return "Stats [malicious=" + malicious + ", suspicious=" + suspicious + ", undetected=" + undetected

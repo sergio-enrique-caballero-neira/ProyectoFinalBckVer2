@@ -14,12 +14,17 @@ import jakarta.persistence.OneToOne;
 @Entity
 public class Data {
 	
+	/** Identificador interno del objeto Data. */
 	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) long data_id;
 	
+	/** Identificador del analisis en VirusTotal. */
 	private String id;
+	/** Tipo de analisis. */
 	private String type;
+	/** Nombre original del archivo. */
 	private String nombreArchivo;
 
+	/** Atributos del analisis de VirusTotal. */
 	@OneToOne(cascade = CascadeType.ALL)
 	private Attributes attributes;
 
@@ -123,6 +128,10 @@ public class Data {
 		this.data_id = data_id;
 	}
 
+	/**
+	 * Representacion textual de los datos del analisis.
+	 * @return cadena con el ID, tipo y atributos del analisis
+	 */
 	@Override
 	public String toString() {
 		return "Data [id=" + id + ", type=" + type + ", attributes=" + "]";

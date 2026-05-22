@@ -23,8 +23,10 @@ import co.edu.unbosque.proyectoFinal.entity.Persona;
 @Component
 public class JwtUtil {
 
-    private static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60 * 1000; // 24 horas
+    /** Duracion del token JWT en milisegundos (24 horas). */
+    private static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60 * 1000;
 
+    /** Clave secreta para firmar los tokens JWT. */
     @Value("${jwt.secret:defaultSecretKeyWhichShouldBeAtLeast32CharactersLong}")
     private String secret;
 

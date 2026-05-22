@@ -17,11 +17,15 @@ import jakarta.persistence.OneToMany;
 @Entity
 public class Attributes {
 
+	/** Identificador interno de los atributos. */
 	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) long id_Attributes;
 
+	/** Estado del analisis (queued, completed, etc.). */
 	private String status;
+	/** Estadisticas de deteccion. */
 	@Embedded
 	private Stats stats;
+	/** Resultados por motor de antivirus. */
 	@OneToMany(cascade = CascadeType.ALL)
 	private Map<String, EngineResult> results;
 
@@ -108,6 +112,10 @@ public class Attributes {
 		this.id_Attributes = id_Attributes;
 	}
 
+	/**
+	 * Representacion textual de los atributos del analisis.
+	 * @return cadena con el estado, estadisticas y resultados
+	 */
 	@Override
 	public String toString() {
 		return "Attributes [status=" + status + ", stats=" + stats.toString() + ", results=" + results + "]";

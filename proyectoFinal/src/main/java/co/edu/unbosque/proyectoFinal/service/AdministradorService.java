@@ -21,12 +21,15 @@ import co.edu.unbosque.proyectoFinal.repository.AdministradorRepository;
 @Service
 public class AdministradorService implements CRUDoperation<AdministradorDTO> {
 	
+	/** Repositorio de administradores. */
 	@Autowired
 	private AdministradorRepository administradorRepository;
 	
+	/** Mapeador de entidades a DTOs. */
 	@Autowired
 	private ModelMapper mapper;
 	
+	/** Codificador de contraseñas. */
 	@Autowired
     private PasswordEncoder passwordEncoder;
 	

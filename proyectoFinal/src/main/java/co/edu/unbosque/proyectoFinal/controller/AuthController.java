@@ -25,7 +25,9 @@ import co.edu.unbosque.proyectoFinal.security.JwtUtil;
 @CrossOrigin(origins = { "http://localhost:8080", "*" })
 public class AuthController {
 
+    /** Gestor de autenticacion de Spring Security. */
     private final AuthenticationManager authenticationManager;
+    /** Utilidad para generacion y validacion de tokens JWT. */
     private final JwtUtil jwtUtil;
 
     /**
@@ -72,7 +74,9 @@ public class AuthController {
      * DTO interno para la respuesta de autenticacion con token JWT y rol del usuario.
      */
     private static class AuthResponse {
+        /** Token JWT de autenticacion. */
         private final String token;
+        /** Rol del usuario autenticado. */
         private final String role;
 
         /**

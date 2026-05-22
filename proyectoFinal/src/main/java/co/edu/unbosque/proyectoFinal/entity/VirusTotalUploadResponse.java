@@ -14,8 +14,10 @@ import jakarta.persistence.OneToOne;
 @Entity
 public class VirusTotalUploadResponse {
 	
+	/** Identificador interno de la respuesta. */
 	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) long id_Response;
 	
+	/** Datos del analisis de VirusTotal. */
 	@OneToOne(cascade = CascadeType.ALL)
 	private Data data;
 	
@@ -66,6 +68,10 @@ public class VirusTotalUploadResponse {
 		this.id_Response = id_Response;
 	}
 
+	/**
+	 * Representacion textual de la respuesta de VirusTotal.
+	 * @return cadena con los datos del analisis
+	 */
 	@Override
 	public String toString() {
 		return data.toString();

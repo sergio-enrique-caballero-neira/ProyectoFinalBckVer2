@@ -6,8 +6,10 @@ package co.edu.unbosque.proyectoFinal.dto;
  */
 public class VirusTotalUploadResponseDTO {
 	
+	/** Identificador interno de la respuesta. */
 	private long id_Response;
 	
+	/** Datos del analisis de VirusTotal. */
 	private DataDTO data;
 	
 	/**
@@ -57,6 +59,10 @@ public class VirusTotalUploadResponseDTO {
 		this.id_Response = id_Response;
 	}
 
+	/**
+	 * Representacion textual de la respuesta de VirusTotal.
+	 * @return cadena con los datos del analisis
+	 */
 	@Override
 	public String toString() {
 		return data.toString();

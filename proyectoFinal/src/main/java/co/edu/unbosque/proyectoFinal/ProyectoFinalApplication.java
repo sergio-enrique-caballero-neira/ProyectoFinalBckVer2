@@ -12,6 +12,10 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class ProyectoFinalApplication {
 
+	/**
+	 * Punto de entrada de la aplicacion Spring Boot.
+	 * @param args argumentos de linea de comandos
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(ProyectoFinalApplication.class, args);
 	}

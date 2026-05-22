@@ -7,12 +7,17 @@ package co.edu.unbosque.proyectoFinal.dto;
  */
 public class DataDTO {
 	
+	/** Identificador interno del objeto DataDTO. */
 	private long data_id;
 	
+	/** Identificador del analisis en VirusTotal. */
 	private String id;
+	/** Tipo de analisis. */
 	private String type;
+	/** Nombre original del archivo. */
 	private String nombreArchivo;
 
+	/** Atributos del analisis de VirusTotal. */
 	private AttributesDTO attributes;
 
 	/**
@@ -112,6 +117,10 @@ public class DataDTO {
 		this.data_id = data_id;
 	}
 
+	/**
+	 * Representacion textual de los datos del analisis.
+	 * @return cadena con el ID, tipo y atributos del analisis
+	 */
 	@Override
 	public String toString() {
 		return "Data [id=" + id + ", type=" + type + ", attributes=" + "]";

@@ -23,12 +23,15 @@ import co.edu.unbosque.proyectoFinal.repository.UsuarioRepository;
 @Service
 public class UsuarioService implements CRUDoperation<UsuarioDTO> {
 
+	/** Repositorio de usuarios. */
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
+	/** Mapeador de entidades a DTOs. */
 	@Autowired
 	private ModelMapper mapper;
 	
+	/** Codificador de contraseñas. */
 	@Autowired
     private PasswordEncoder passwordEncoder;
 

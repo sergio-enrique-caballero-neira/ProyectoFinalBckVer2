@@ -21,10 +21,10 @@ import org.apache.commons.codec.digest.DigestUtils;
  */
 public class AESUtil {
 
-  /** Algoritmo de cifrado utilizado (AES). */
+  /** Algoritmo de cifrado utilizado. */
   private static final String ALGORITMO = "AES";
 
-  /** Modo de cifrado y padding utilizados (AES en modo GCM sin padding). */
+  /** Modo de cifrado y padding utilizados (AES/GCM/NoPadding). */
   private static final String TIPOCIFRADO = "AES/GCM/NoPadding";
 
   /**
@@ -171,24 +171,5 @@ public class AESUtil {
   public static String hashingToSHA512(String content) {
     return DigestUtils.sha512Hex(content);
   }
-
-  //	public static void main(String[] args) {
-  //		String texto = "zambrano lo robaron hace meses";
-  //		System.out.println(texto);
-  //
-  //		String codificado = encrypt(texto);
-  //		System.out.println(codificado);
-  //
-  //		String decodificado = decrypt(codificado);
-  //		System.out.println(decodificado);
-  //
-  //		String
-  // contrasena="soyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseñasoyunacontraseña";
-  //		System.out.println(hashingToMD5(contrasena));
-  //		System.out.println(hashingToSHA1(contrasena));
-  //		System.out.println(hashingToSHA256(contrasena));
-  //		System.out.println(hashingToSHA384(contrasena));
-  //		System.out.println(hashingToSHA512(contrasena));
-  //	}
 
 }

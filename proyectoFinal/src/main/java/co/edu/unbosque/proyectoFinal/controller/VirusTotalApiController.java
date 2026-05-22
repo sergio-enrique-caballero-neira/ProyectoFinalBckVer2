@@ -29,9 +29,11 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @SecurityRequirement(name = "bearerAuth")
 public class VirusTotalApiController {
 
+	/** Servicio de integracion con la API de VirusTotal. */
 	@Autowired
 	private VirustotalService virustotalService;
 
+	/** Servicio de logica de negocio para usuarios. */
 	@Autowired
 	private UsuarioService usuarioService;
 

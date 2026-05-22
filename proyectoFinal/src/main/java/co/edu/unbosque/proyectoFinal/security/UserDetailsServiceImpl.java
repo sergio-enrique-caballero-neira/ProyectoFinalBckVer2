@@ -17,7 +17,9 @@ import co.edu.unbosque.proyectoFinal.repository.UsuarioRepository;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+	/** Repositorio de usuarios. */
 	private final UsuarioRepository usuarioRepository;
+	/** Repositorio de administradores. */
 	private final AdministradorRepository administradorRepository;
 
 	/**

@@ -20,6 +20,7 @@ public class Administrador extends Persona {
 
 	private static final long serialVersionUID = 1L;
 	
+	/** Cargo del administrador. */
 	private String cargo;
 	
 	/**
@@ -81,16 +82,28 @@ public class Administrador extends Persona {
 		this.cargo = cargo;
 	}
 	
+	/**
+	 * Obtiene las autoridades (roles) del administrador para Spring Security.
+	 * @return coleccion con el rol del administrador prefijado con ROLE_
+	 */
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return List.of(new SimpleGrantedAuthority("ROLE_" + this.getRole().name()));
 	}
 
+	/**
+	 * Obtiene la contraseña del administrador para autenticacion.
+	 * @return contraseña del administrador
+	 */
 	@Override
 	public String getPassword() {
 		return super.getContrasena();
 	}
 
+	/**
+	 * Obtiene el nombre de usuario para autenticacion.
+	 * @return nombre del administrador
+	 */
 	@Override
 	public String getUsername() {
 		return super.getNombre();

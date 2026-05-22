@@ -27,10 +27,13 @@ import okhttp3.Response;
 @Service
 public class VirustotalService {
 
+	/** Cliente HTTP para llamadas a la API de VirusTotal. */
 	private OkHttpClient cliente = new OkHttpClient();
+	/** Deserializador JSON. */
 	@Autowired
 	private Gson gson;
 	
+	/** Mapeador de entidades a DTOs. */
 	@Autowired
 	private ModelMapper mapper;
 

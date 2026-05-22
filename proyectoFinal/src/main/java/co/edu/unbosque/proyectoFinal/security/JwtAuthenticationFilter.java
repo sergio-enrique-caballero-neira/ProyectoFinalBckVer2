@@ -21,7 +21,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    /** Utilidad para validacion de tokens JWT. */
     private final JwtUtil jwtUtil;
+    /** Servicio para cargar detalles de usuarios desde la base de datos. */
     private final UserDetailsService userDetailsService;
 
     /**

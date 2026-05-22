@@ -14,6 +14,7 @@ public class UsuarioDTO extends PersonaDTO {
 	/**id*/
 	private static final long serialVersionUID = 1L;
 	
+	/** Historial de analisis de VirusTotal del usuario. */
 	private List<VirusTotalUploadResponseDTO> historial;
 
 	/**
@@ -76,16 +77,28 @@ public class UsuarioDTO extends PersonaDTO {
 		this.historial = List.copyOf(historial);
 	}
 	
+	/**
+	 * Obtiene las autoridades (roles) del usuario para Spring Security.
+	 * @return coleccion con el rol del usuario prefijado con ROLE_
+	 */
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return List.of(new SimpleGrantedAuthority("ROLE_" + this.getRole().name()));
 	}
 
+	/**
+	 * Obtiene la contraseña del usuario para autenticacion.
+	 * @return contraseña del usuario
+	 */
 	@Override
 	public String getPassword() {
 		return super.getContrasena();
 	}
 
+	/**
+	 * Obtiene el nombre de usuario para autenticacion.
+	 * @return nombre del usuario
+	 */
 	@Override
 	public String getUsername() {
 		return super.getNombre();

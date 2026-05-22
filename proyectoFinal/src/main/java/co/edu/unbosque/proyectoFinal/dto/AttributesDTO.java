@@ -8,10 +8,14 @@ import java.util.Map;
  */
 public class AttributesDTO {
 
+	/** Identificador interno de los atributos. */
 	private long id_Attributes;
 
+	/** Estado del analisis (queued, completed, etc.). */
 	private String status;
+	/** Estadisticas de deteccion. */
 	private StatsDTO stats;
+	/** Resultados por motor de antivirus. */
 	private Map<String, EngineResultDTO> results;
 
 	/**
@@ -97,6 +101,10 @@ public class AttributesDTO {
 		this.id_Attributes = id_Attributes;
 	}
 
+	/**
+	 * Representacion textual de los atributos del analisis.
+	 * @return cadena con el estado, estadisticas y resultados
+	 */
 	@Override
 	public String toString() {
 		return "Attributes [status=" + status + ", stats=" + stats.toString() + ", results=" + results + "]";

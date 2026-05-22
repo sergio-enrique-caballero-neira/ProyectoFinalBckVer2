@@ -6,10 +6,14 @@ package co.edu.unbosque.proyectoFinal.dto;
  */
 public class EngineResultDTO {
 
+	/** Identificador interno del resultado del motor. */
 	private long id_EngineResult;
 
+	/** Nombre del motor de antivirus. */
 	private String engine_name;
+	/** Categoria de deteccion. */
 	private String category;
+	/** Resultado del analisis del motor. */
 	private String result;
 
 	/**

@@ -20,6 +20,7 @@ import co.edu.unbosque.proyectoFinal.repository.UsuarioRepository;
 @Configuration
 public class LoadDatabase {
 
+	/** Logger de la clase. */
 	private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
 
 	/**
